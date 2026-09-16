@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Solar System | Interactive Planet Explorer</title>
+
+<style>
+
+    /* =========================
+       GENERAL
+    ========================= */
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #02040a;
+        color: white;
+        overflow-x: hidden;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+
+        background: rgba(2, 4, 10, 0.9);
+        backdrop-filter: blur(12px);
+
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    nav {
+        width: 90%;
+        max-width: 1200px;
+        height: 70px;
+        margin: auto;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        font-size: 23px;
+        font-weight: bold;
+    }
+
+    .logo span {
+        color: #00d9ff;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 28px;
+        list-style: none;
+    }
+
+    .nav-links a {
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+        color: #00d9ff;
+    }
+
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+        min-height: 100vh;
+        padding-top: 100px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        text-align: center;
+
+        background:
+            radial-gradient(
+                circle at center,
+                rgba(0, 100, 180, 0.12),
+                transparent 45%
+            );
+    }
+
+    .hero-text {
+        width: 90%;
+        max-width: 750px;
+        margin-bottom: 30px;
+    }
+
+    .hero-text p {
+        color: #00d9ff;
+        font-size: 13px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        margin-bottom: 10px;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(38px, 6vw, 65px);
+        margin-bottom: 12px;
+    }
+
+    .hero-text h1 span {
+        color: #00d9ff;
+    }
+
+    .hero-text .description {
+        color: #9da5b5;
+        font-size: 16px;
+    }
+
+
+    /* =========================
+       SOLAR SYSTEM
+    ========================= */
+
+    .solar-system {
+        position: relative;
+
+        width: min(90vw, 850px);
+        height: min(90vw, 850px);
+
+        margin: 10px auto 80px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    /* =========================
+       SUN
+    ========================= */
+
+    .sun {
+        position: absolute;
+
+        width: 90px;
+        height: 90px;
+
+        border-radius: 50%;
+
+        background:
+            radial-gradient(
+                circle at 35% 35%,
+                #fff5a3,
+                #ffd000 45%,
+                #ff8c00 75%,
+                #ff4500
+            );
+
+        box-shadow:
+            0 0 25px #ffb300,
+            0 0 55px rgba(255, 166, 0, 0.55);
+
+        z-index: 20;
+    }
+
+    .sun-label {
+        position: absolute;
+        top: 100px;
+
+        font-size: 13px;
+        color: #ffd45c;
+        font-weight: bold;
+
+        z-index: 30;
+    }
+
+
+    /* =========================
+       ORBITS
+    ========================= */
+
+    .orbit {
+        position: absolute;
+
+        border: 1px solid rgba(255, 255, 255, 0.22);
+
+        border-radius: 50%;
+
+        top: 50%;
+        left: 50%;
+
+        transform: translate(-50%, -50%);
+
+        pointer-events: none;
+    }
+
+    .orbit-1 {
+        width: 150px;
+        height: 150px;
+    }
+
+    .orbit-2 {
+        width: 220px;
+        height: 220px;
+    }
+
+    .orbit-3 {
+        width: 295px;
+        height: 295px;
+    }
+
+    .orbit-4 {
+        width: 370px;
+        height: 370px;
+    }
+
+    .orbit-5 {
+        width: 490px;
+        height: 490px;
+    }
+
+    .orbit-6 {
+        width: 610px;
+        height: 610px;
+    }
+
+    .orbit-7 {
+        width: 720px;
+        height: 720px;
+    }
+
+    .orbit-8 {
+        width: 825px;
+        height: 825px;
+    }
+
+
+    /* =========================
+       PLANETS
+    ========================= */
+
+    .planet {
+        position: absolute;
+
+        top: 50%;
+        left: 50%;
+
+        border-radius: 50%;
+
+        transform-origin: 50% 50%;
+
+        cursor: pointer;
+
+        z-index: 40;
+
+        transition:
+            transform 0.3s,
+            box-shadow 0.3s;
+    }
+
+    .planet:hover {
+        box-shadow:
+            0 0 15px rgba(255, 255, 255, 0.7);
+    }
+
+
+    /* Mercury */
+
+    .mercury {
+        width: 13px;
+        height: 13px;
+
+        background: #aaa;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(0deg)
+            translateX(75px);
+    }
+
+
+    /* Venus */
+
+    .venus {
+        width: 19px;
+        height: 19px;
+
+        background: #d89c52;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(45deg)
+            translateX(110px);
+    }
+
+
+    /* Earth */
+
+    .earth {
+        width: 22px;
+        height: 22px;
+
+        background:
+            radial-gradient(
+                circle at 60% 35%,
+                #6fc8ff,
+                #1767c5 45%,
+                #124a8a
+            );
+
+        transform:
+            translate(-50%, -50%)
+            rotate(100deg)
+            translateX(147px);
+    }
+
+
+    /* Mars */
+
+    .mars {
+        width: 18px;
+        height: 18px;
+
+        background: #c94b36;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(150deg)
+            translateX(185px);
+    }
+
+
+    /* Jupiter */
+
+    .jupiter {
+        width: 45px;
+        height: 45px;
+
+        background:
+            linear-gradient(
+                #c99c70 0%,
+                #e0c19c 20%,
+                #9c6d4a 35%,
+                #e6c9a7 50%,
+                #a97955 70%,
+                #d6af88 100%
+            );
+
+        transform:
+            translate(-50%, -50%)
+            rotate(210deg)
+            translateX(245px);
+    }
+
+
+    /* Saturn */
+
+    .saturn {
+        width: 39px;
+        height: 39px;
+
+        background:
+            linear-gradient(
+                #e6d3a7,
+                #b99b67,
+                #e5cc96
+            );
+
+        transform:
+            translate(-50%, -50%)
+            rotate(250deg)
+            translateX(305px);
+    }
+
+    .saturn::after {
+        content: "";
+
+        position: absolute;
+
+        width: 65px;
+        height: 16px;
+
+        left: 50%;
+        top: 50%;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(-20deg);
+
+        border: 2px solid rgba(220, 200, 150, 0.8);
+
+        border-radius: 50%;
+    }
+
+
+    /* Uranus */
+
+    .uranus {
+        width: 30px;
+        height: 30px;
+
+        background: #76d8df;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(300deg)
+            translateX(360px);
+    }
+
+
+    /* Neptune */
+
+    .neptune {
+        width: 30px;
+        height: 30px;
+
+        background: #4169e1;
+
+        transform:
+            translate(-50%, -50%)
+            rotate(335deg)
+            translateX(412px);
+    }
+
+
+    /* =========================
+       PLANET LABELS
+    ========================= */
+
+    .planet-label {
+        position: absolute;
+
+        color: #dce6f5;
+
+        font-size: 11px;
+        font-weight: bold;
+
+        pointer-events: none;
+
+        z-index: 50;
+    }
+
+    .mercury-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(0deg)
+            translateX(75px)
+            translateY(-18px);
+    }
+
+    .venus-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(45deg)
+            translateX(110px)
+            translateY(-20px);
+    }
+
+    .earth-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(100deg)
+            translateX(147px)
+            translateY(-21px);
+    }
+
+    .mars-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(150deg)
+            translateX(185px)
+            translateY(-20px);
+    }
+
+    .jupiter-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(210deg)
+            translateX(245px)
+            translateY(-28px);
+    }
+
+    .saturn-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(250deg)
+            translateX(305px)
+            translateY(-28px);
+    }
+
+    .uranus-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(300deg)
+            translateX(360px)
+            translateY(-25px);
+    }
+
+    .neptune-label {
+        transform:
+            translate(-50%, -50%)
+            rotate(335deg)
+            translateX(412px)
+            translateY(-25px);
+    }
+
+
+    /* =========================
+       INFORMATION SECTION
+    ========================= */
+
+    .planet-info-section {
+        width: 100%;
+        padding: 80px 5%;
+
+        background: #080c16;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .section-title p {
+        color: #00d9ff;
+        font-size: 13px;
+        font-weight: bold;
+        letter-spacing: 3px;
+    }
+
+    .section-title h2 {
+        font-size: 40px;
+        margin-top: 5px;
+    }
+
+    .section-title h2 span {
+        color: #00d9ff;
+    }
+
+
+    /* =========================
+       PLANET CARDS
+    ========================= */
+
+    .planet-cards {
+        max-width: 1200px;
+        margin: auto;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap: 20px;
+    }
+
+    .planet-card {
+        padding: 25px;
+
+        background: #101522;
+
+        border:
+            1px solid #1e293b;
+
+        border-radius: 12px;
+
+        cursor: pointer;
+
+        transition: 0.3s;
+    }
+
+    .planet-card:hover {
+        transform: translateY(-6px);
+        border-color: #00d9ff;
+    }
+
+    .planet-card h3 {
+        margin-bottom: 10px;
+        color: #00d9ff;
+    }
+
+    .planet-card p {
+        color: #9da5b5;
+        font-size: 14px;
+    }
+
+
+    /* =========================
+       BACK BUTTON
+    ========================= */
+
+    .back-button {
+        display: inline-block;
+
+        position: fixed;
+
+        bottom: 25px;
+        left: 25px;
+
+        z-index: 900;
+
+        padding: 12px 20px;
+
+        background: #00d9ff;
+        color: #031018;
+
+        border-radius: 7px;
+
+        font-weight: bold;
+
+        box-shadow:
+            0 8px 25px rgba(0, 217, 255, 0.2);
+
+        transition: 0.3s;
+    }
+
+    .back-button:hover {
+        transform: translateY(-3px);
+    }
+
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+        padding: 30px;
+
+        text-align: center;
+
+        background: #02040a;
+
+        border-top:
+            1px solid #1e293b;
+    }
+
+    footer p {
+        color: #6f7785;
+        font-size: 13px;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+        .solar-system {
+            width: 700px;
+            height: 700px;
+        }
+
+        .orbit-8 {
+            width: 680px;
+            height: 680px;
+        }
+
+        .neptune {
+            transform:
+                translate(-50%, -50%)
+                rotate(335deg)
+                translateX(340px);
+        }
+
+        .planet-cards {
+            grid-template-columns:
+                repeat(2, 1fr);
+        }
+    }
+
+
+    @media (max-width: 650px) {
+
+        .nav-links {
+            display: none;
+        }
+
+        .hero {
+            overflow: hidden;
+        }
+
+        .solar-system {
+            width: 500px;
+            height: 500px;
+
+            transform: scale(0.72);
+
+            margin-top: -50px;
+            margin-bottom: -50px;
+        }
+
+        .orbit-8 {
+            width: 470px;
+            height: 470px;
+        }
+
+        .orbit-7 {
+            width: 410px;
+            height: 410px;
+        }
+
+        .orbit-6 {
+            width: 350px;
+            height: 350px;
+        }
+
+        .orbit-5 {
+            width: 290px;
+            height: 290px;
+        }
+
+        .orbit-4 {
+            width: 230px;
+            height: 230px;
+        }
+
+        .orbit-3 {
+            width: 180px;
+            height: 180px;
+        }
+
+        .orbit-2 {
+            width: 135px;
+            height: 135px;
+        }
+
+        .orbit-1 {
+            width: 90px;
+            height: 90px;
+        }
+
+        .planet-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+        }
+
+        .back-button {
+            bottom: 15px;
+            left: 15px;
+        }
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<header>
+
+    <nav>
+
+        <a href="index.html" class="logo">
+            Solar<span>System</span>
+        </a>
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="#home">Home</a>
+            </li>
+
+            <li>
+                <a href="#planets">Planets</a>
+            </li>
+
+            <li>
+                <a href="index.html">Portfolio</a>
+            </li>
+
+        </ul>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section id="home" class="hero">
+
+    <div class="hero-text">
+
+        <p>EXPLORE OUR UNIVERSE</p>
+
+        <h1>
+            Interactive <span>Solar System</span>
+        </h1>
+
+        <p class="description">
+            Explore the planets of our solar system.
+            Click a planet to learn more about it.
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         SOLAR SYSTEM
+    ========================= -->
+
+    <div class="solar-system">
+
+
+        <!-- Orbits -->
+
+        <div class="orbit orbit-1"></div>
+        <div class="orbit orbit-2"></div>
+        <div class="orbit orbit-3"></div>
+        <div class="orbit orbit-4"></div>
+        <div class="orbit orbit-5"></div>
+        <div class="orbit orbit-6"></div>
+        <div class="orbit orbit-7"></div>
+        <div class="orbit orbit-8"></div>
+
+
+        <!-- Sun -->
+
+        <div class="sun"></div>
+
+        <div class="sun-label">
+            SUN
+        </div>
+
+
+        <!-- Planets -->
+
+        <a
+            href="#mercury-info"
+            class="planet mercury"
+            title="Mercury"
+        ></a>
+
+        <a
+            href="#venus-info"
+            class="planet venus"
+            title="Venus"
+        ></a>
+
+        <a
+            href="#earth-info"
+            class="planet earth"
+            title="Earth"
+        ></a>
+
+        <a
+            href="#mars-info"
+            class="planet mars"
+            title="Mars"
+        ></a>
+
+        <a
+            href="#jupiter-info"
+            class="planet jupiter"
+            title="Jupiter"
+        ></a>
+
+        <a
+            href="#saturn-info"
+            class="planet saturn"
+            title="Saturn"
+        ></a>
+
+        <a
+            href="#uranus-info"
+            class="planet uranus"
+            title="Uranus"
+        ></a>
+
+        <a
+            href="#neptune-info"
+            class="planet neptune"
+            title="Neptune"
+        ></a>
+
+
+        <!-- Planet Names -->
+
+        <span class="planet-label mercury-label">
+            Mercury
+        </span>
+
+        <span class="planet-label venus-label">
+            Venus
+        </span>
+
+        <span class="planet-label earth-label">
+            Earth
+        </span>
+
+        <span class="planet-label mars-label">
+            Mars
+        </span>
+
+        <span class="planet-label jupiter-label">
+            Jupiter
+        </span>
+
+        <span class="planet-label saturn-label">
+            Saturn
+        </span>
+
+        <span class="planet-label uranus-label">
+            Uranus
+        </span>
+
+        <span class="planet-label neptune-label">
+            Neptune
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PLANET INFORMATION
+========================= -->
+
+<section id="planets" class="planet-info-section">
+
+    <div class="section-title">
+
+        <p>DISCOVER THE PLANETS</p>
+
+        <h2>
+            Planet <span>Explorer</span>
+        </h2>
+
+    </div>
+
+
+    <div class="planet-cards">
+
+
+        <!-- Mercury -->
+
+        <article
+            id="mercury-info"
+            class="planet-card"
+        >
+
+            <h3>☿ Mercury</h3>
+
+            <p>
+                Mercury is the closest planet to the Sun
+                and the smallest planet in our solar system.
+            </p>
+
+        </article>
+
+
+        <!-- Venus -->
+
+        <article
+            id="venus-info"
+            class="planet-card"
+        >
+
+            <h3>♀ Venus</h3>
+
+            <p>
+                Venus is the second planet from the Sun
+                and has a thick atmosphere.
+            </p>
+
+        </article>
+
+
+        <!-- Earth -->
+
+        <article
+            id="earth-info"
+            class="planet-card"
+        >
+
+            <h3>🌍 Earth</h3>
+
+            <p>
+                Earth is the third planet from the Sun
+                and the only known planet with life.
+            </p>
+
+        </article>
+
+
+        <!-- Mars -->
+
+        <article
+            id="mars-info"
+            class="planet-card"
+        >
+
+            <h3>♂ Mars</h3>
+
+            <p>
+                Mars is known as the Red Planet because
+                of the iron minerals in its surface.
+            </p>
+
+        </article>
+
+
+        <!-- Jupiter -->
+
+        <article
+            id="jupiter-info"
+            class="planet-card"
+        >
+
+            <h3>♃ Jupiter</h3>
+
+            <p>
+                Jupiter is the largest planet in our
+                solar system and is a gas giant.
+            </p>
+
+        </article>
+
+
+        <!-- Saturn -->
+
+        <article
+            id="saturn-info"
+            class="planet-card"
+        >
+
+            <h3>♄ Saturn</h3>
+
+            <p>
+                Saturn is a gas giant famous for its
+                large and beautiful ring system.
+            </p>
+
+        </article>
+
+
+        <!-- Uranus -->
+
+        <article
+            id="uranus-info"
+            class="planet-card"
+        >
+
+            <h3>♅ Uranus</h3>
+
+            <p>
+                Uranus is an ice giant with a blue-green
+                appearance and a tilted rotation.
+            </p>
+
+        </article>
+
+
+        <!-- Neptune -->
+
+        <article
+            id="neptune-info"
+            class="planet-card"
+        >
+
+            <h3>♆ Neptune</h3>
+
+            <p>
+                Neptune is the eighth planet from the Sun
+                and is known for its strong winds.
+            </p>
+
+        </article>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     BACK TO PORTFOLIO
+========================= -->
+
+<a href="index.html" class="back-button">
+    ← Back to Portfolio
+</a>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <p>
+        © 2026 Solar System Project
+    </p>
+
+</footer>
+
+</body>
+
+</html>
